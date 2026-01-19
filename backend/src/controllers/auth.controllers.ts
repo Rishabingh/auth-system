@@ -6,6 +6,7 @@ import { IUserResponse } from "../types/User.types.js";
 import { IUser } from "../types/User.types.js";
 import { RegisterInput } from "../types/User.types.js";
 import jwt, {JwtPayload} from 'jsonwebtoken'
+import { AuthRequest } from "../types/request.js";
 
 interface RefreshPayload extends JwtPayload {
   username: string;
@@ -117,8 +118,24 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }).json(new ApiResponse<{accessToken: string}>(200, {accessToken: newAccessToken}))
 })
 
+const logoutUser = asyncHandler(async(req: AuthRequest, res) => {
+  const user = req.user;
+  if(!user)
+    throw new ApiError(400, 'something went wrong user not exist on req')
+
+  user.refreshToken = "";
+  await user.save({validateBeforeSave: false});
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax'
+  }).status(200).json(new ApiResponse<null>(200, null, 'logout successful'))
+})
+
 export {
   registerUser,
   loginUser,
-  refreshAccessToken
+  refreshAccessToken,
+  logoutUser
 }
