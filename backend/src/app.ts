@@ -1,0 +1,24 @@
+import express, { Express, Request, Response, NextFunction } from "express";
+import cors from 'cors'
+import cookieParser from "cookie-parser";
+
+const app: Express = express();
+
+app.use(cors({
+  credentials: true,
+  origin: "http://localhost:5173",
+  allowedHeaders: ["Content-Type", "Authorization"]
+}))
+
+app.use(cookieParser());
+app.use(express.static("../public"));
+app.use(express.json({limit: '32kb'}));
+app.use(express.urlencoded({extended: true}));
+
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({message: 'hello'})
+})
+
+export {
+  app
+}
