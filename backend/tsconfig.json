@@ -31,6 +31,8 @@
 
     // Recommended Options
     "strict": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+
+  },
+  "exclude": ["node_modules", "dist"]
 }
