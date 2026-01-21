@@ -1,0 +1,23 @@
+.login {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.login-heading {
+ text-align: center;
+}
+
+
+.login-div {
+    max-width: 18rem;
+    background: rgb(104, 235, 178);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
