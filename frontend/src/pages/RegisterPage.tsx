@@ -2,13 +2,13 @@ import '../css/login-page.css'
 import { Link } from 'react-router'
 import React, { useState } from 'react'
 
-export const LoginPage = () => {
+export const RegisterPage = () => {
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("")
   return (
     <div className='login-div'>
-      <h1 className='login-heading black'>login</h1>
+      <h1 className='login-heading black'>Sign Up</h1>
       <form action="" className="login">
         <div className='flex'>
         <label htmlFor="username">Username</label>
