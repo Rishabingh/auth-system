@@ -1,15 +1,32 @@
 import '../css/login-page.css'
 import { Link } from 'react-router'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useLogin } from '../hooks/useLogin'
+import { useNavigate } from 'react-router'
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("")
+  const navigate = useNavigate();
+
+  const {loading, loginReq, error, user} = useLogin()
+
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    await loginReq(username, email, password)
+  }
+
+  useEffect(() => {
+    if(user) {
+      localStorage.setItem('accessToken', user.accessToken);
+      navigate('/')
+    }
+  }, [user, navigate])
   return (
     <div className='login-div'>
       <h1 className='login-heading black'>login</h1>
-      <form action="" className="login">
+      <form action="" className="login" onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
         <div className='flex'>
         <label htmlFor="username">Username</label>
         <input 
@@ -41,7 +58,8 @@ export const LoginPage = () => {
         />
         </div>
 
-        <button type='submit'>Submit</button>
+        <button type='submit'>{loading ? "wait..." : "Submit"}</button>
+        {error && (<div>{error}</div>)}
       </form>
       <div className='black'>
         don't have an account, <Link to={'/register'}>signup</Link> instead

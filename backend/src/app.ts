@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, NextFunction } from "express";
+import express, { Express, Request, Response} from "express";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./utils/ErrorHandler.js";
@@ -23,11 +23,13 @@ app.get("/", (req: Request, res: Response) => {
 // importing routers
 import healthCheckRouter from './routes/healthCheck.routes.js';
 import authRouter from './routes/auth.routes.js'
+import secretRouter from './routes/secret.routes.js';
 
 // defining routes
 
 app.use('/health-check', healthCheckRouter);
 app.use('/user', authRouter);
+app.use('/data', secretRouter)
 
 // global error handler
 app.use(errorHandler);

@@ -22,6 +22,12 @@ export interface IUserResponse {
   accessToken: string;
 }
 
+type IUserWithoutToken = Omit<IUserResponse, "accessToken">;
+
+export interface IsecretResponse extends IUserWithoutToken {
+  secret: {setup: string, punchLine: string}
+}
+
 
 export interface RegisterInput {
   email: string;

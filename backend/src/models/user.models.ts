@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt'
 import { IUser } from "../types/User.types.js";
 import jwt from 'jsonwebtoken'
+import { ApiError } from "../utils/ApiError.js";
 
 const userSchema = new mongoose.Schema<IUser>({
   name: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
@@ -57,7 +57,7 @@ userSchema.methods.generateRefreshToken = function (this: IUser): string {
   if(process.env.REFRESH_SECRET) {
     secret = process.env.REFRESH_SECRET
   } else {
-    secret = "secretnotprovided";
+    throw new ApiError(500, 'secret error')
   }
 
   const refreshToken = jwt.sign(payload, secret, {expiresIn: "10m"})
@@ -73,7 +73,7 @@ userSchema.methods.generateAccessToken = function (this: IUser): string {
   if(process.env.ACCESS_SECRET) {
     secret = process.env.ACCESS_SECRET
   } else {
-    secret = "secretnotprovided";
+    throw new ApiError(500, "secret not provided")
   }
 
   const AccessToken = jwt.sign(payload, secret, {expiresIn: '2m'})

@@ -1,7 +1,8 @@
 import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import jwt, {JwtPayload} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+import type { JwtPayload } from "jsonwebtoken";
 import { AuthRequest } from "../types/request.js";
 
 interface RefreshPayload extends JwtPayload {
@@ -17,13 +18,22 @@ export const verifySattachUser = asyncHandler(async(req: AuthRequest, res, next)
   if(!process.env.ACCESS_SECRET)
     throw new ApiError(500, "access token secret not provided")
 
-  const decoded = jwt.verify(
+  let decoded: JwtPayload; 
+
+  try {
+    decoded = jwt.verify(
     accessToken,
     process.env.ACCESS_SECRET
-  );
+  ) as JwtPayload;
+  } catch (error) {
+    if(error instanceof jwt.TokenExpiredError) {
+      throw new ApiError(401, "access token expired")
+    }
 
-  if (typeof decoded === "string") {
-    throw new ApiError(401, "Invalid access token");
+    if(error instanceof jwt.JsonWebTokenError) {
+      throw new ApiError(401, "invalid access token");
+    }
+    throw error;
   }
 
   const payload = decoded as RefreshPayload;

@@ -1,0 +1,28 @@
+.fixed {
+    position: fixed;
+    background-color: black;
+    color: white;
+}
+.inset {
+    right: 0;
+    left: 0;
+    top: 0;
+}
+
+.p {
+    padding: 1rem 2px 1rem 2px;
+}
+.flex {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+}
+
+.white {
+    color: white;
+}
+
+.red {
+    color: red;
+}

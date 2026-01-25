@@ -111,6 +111,7 @@ const loginUser = asyncHandler(async (req, res) => {
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
 
+
   if (!refreshToken) throw new ApiError(401, "No refresh token");
 
   if (!process.env.REFRESH_SECRET) throw new ApiError(500, "Missing secret");
@@ -131,8 +132,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       "user not exist probably account deleted or banned",
     );
 
+   if(user.refreshToken !== refreshToken) throw new ApiError(401, "invalid refresh token")
+
   const newRefreshToken = user.generateRefreshToken();
   const newAccessToken = user.generateAccessToken();
+
+  res.clearCookie("refreshToken")
 
   await user.save({ validateBeforeSave: false });
 
@@ -169,9 +174,5 @@ const logoutUser = asyncHandler(async (req: AuthRequest, res) => {
     .json(new ApiResponse<null>(200, null, "logout successful"));
 });
 
-const sayinghello = asyncHandler(async (req, res) => {
-  const sayHi = "hello";
-  
-})
 
 export { registerUser, loginUser, refreshAccessToken, logoutUser };
